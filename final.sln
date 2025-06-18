@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "income_verifier", "income_verifier\income_verifier.csproj", "{77080404-E175-4D79-B88F-901C3D657D55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "income_verifier_xUnit_tests", "income_verifier_xUnit_tests\income_verifier_xUnit_tests.csproj", "{424EE0EA-AA7E-43EB-BDD3-1C1C96AD7DD7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77080404-E175-4D79-B88F-901C3D657D55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77080404-E175-4D79-B88F-901C3D657D55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77080404-E175-4D79-B88F-901C3D657D55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77080404-E175-4D79-B88F-901C3D657D55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{424EE0EA-AA7E-43EB-BDD3-1C1C96AD7DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{424EE0EA-AA7E-43EB-BDD3-1C1C96AD7DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{424EE0EA-AA7E-43EB-BDD3-1C1C96AD7DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{424EE0EA-AA7E-43EB-BDD3-1C1C96AD7DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
