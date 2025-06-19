@@ -22,7 +22,7 @@ public class PaymentService(
         {
             if (totalPaid < contract.Price)
                 await paymentRepository.DeleteAllByContractIdAsync(contract.Id);
-            throw new ConflictException("Cannot pay after contract end date. All previous payments have been refunded.");
+            throw new ConflictException("Cannot pay after contract end date.");
         }
 
         if (totalPaid + dto.Amount > contract.Price)
@@ -34,6 +34,7 @@ public class PaymentService(
             Amount = dto.Amount,
             PaymentDate = DateTime.Today
         };
+        
         await paymentRepository.AddAsync(payment);
 
         totalPaid += dto.Amount;

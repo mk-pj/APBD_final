@@ -31,7 +31,7 @@ public class ClientsController(IClientService service) : ControllerBase
     {
         var client = ClientMapper.FromCreateDto(dto);
         var id = await service.AddIndividualClientAsync(client);
-        return CreatedAtAction(nameof(GetById), new { id }, ClientMapper.ToDto(client));
+        return CreatedAtAction(nameof(GetById), new { id }, dto);
     }
 
     [HttpPost("company")]
@@ -39,7 +39,7 @@ public class ClientsController(IClientService service) : ControllerBase
     {
         var client = ClientMapper.FromCreateDto(dto);
         var id = await service.AddCompanyClientAsync(client);
-        return CreatedAtAction(nameof(GetById), new { id }, ClientMapper.ToDto(client));
+        return CreatedAtAction(nameof(GetById), new { id }, dto);
     }
 
     [HttpPut("individual/{id:int}")]

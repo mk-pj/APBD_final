@@ -88,7 +88,7 @@ public class PaymentServiceTests
         var ex = await Assert.ThrowsAsync<ConflictException>(() =>
             _service.AddPaymentAsync(new CreatePaymentDto { ContractId = 2, Amount = 2000 }));
 
-        Assert.Equal("Cannot pay after contract end date. All previous payments have been refunded.", ex.Message);
+        Assert.Equal("Cannot pay after contract end date.", ex.Message);
 
         var payments = await _service.GetPaymentsByContractIdAsync(2);
         Assert.Empty(payments);

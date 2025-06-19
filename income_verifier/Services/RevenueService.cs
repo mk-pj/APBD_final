@@ -75,7 +75,11 @@ public class RevenueService(
 
         var content = await response.Content.ReadAsStringAsync();
 
-        var nbpRate = JsonSerializer.Deserialize<NbpRateResponse>(content);
+        var nbpRate = 
+            JsonSerializer.Deserialize<NbpRateResponse>(content, new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true
+        });
         return nbpRate?.Rates.FirstOrDefault()?.Mid ?? throw new NotFoundException("No rate found!");
     }
 }
