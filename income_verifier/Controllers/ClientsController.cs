@@ -8,7 +8,7 @@ namespace income_verifier.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ClientController(IClientService service) : ControllerBase
+public class ClientsController(IClientService service) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<List<ClientDto>>> GetAll()
@@ -31,7 +31,7 @@ public class ClientController(IClientService service) : ControllerBase
     {
         var client = ClientMapper.FromCreateDto(dto);
         var id = await service.AddIndividualClientAsync(client);
-        return CreatedAtAction(nameof(GetById), new { id }, null);
+        return CreatedAtAction(nameof(GetById), new { id }, ClientMapper.ToDto(client));
     }
 
     [HttpPost("company")]
@@ -39,7 +39,7 @@ public class ClientController(IClientService service) : ControllerBase
     {
         var client = ClientMapper.FromCreateDto(dto);
         var id = await service.AddCompanyClientAsync(client);
-        return CreatedAtAction(nameof(GetById), new { id }, null);
+        return CreatedAtAction(nameof(GetById), new { id }, ClientMapper.ToDto(client));
     }
 
     [HttpPut("individual/{id:int}")]
