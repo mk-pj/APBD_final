@@ -1,8 +1,9 @@
-using income_verifier.DTOs;
+using income_verifier.DTOs.Client;
 using income_verifier.Models;
 using income_verifier.Repositories.Fake;
 using income_verifier.Services;
 using income_verifier.Middlewares;
+using income_verifier.Services.Interfaces;
 
 namespace income_verifier_xUnit_tests.Tests;
 

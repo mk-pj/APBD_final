@@ -1,4 +1,5 @@
 using income_verifier.DTOs;
+using income_verifier.DTOs.Payment;
 using income_verifier.Middlewares;
 using income_verifier.Models;
 using income_verifier.Repositories.Fake;
@@ -18,7 +19,6 @@ public class PaymentServiceTests
         _contractRepo = new FakeContractRepository();
         _service = new PaymentService(_paymentRepo, _contractRepo);
 
-        // Seed kontraktu o wartości 5000, kończy się dzisiaj + 1 dzień
         _contractRepo.SeedContracts([
             new Contract { Id = 1, ClientId = 1, SoftwareId = 1, Price = 5000, 
                 IsSigned = false, StartDate = DateTime.Today.AddDays(-10), EndDate = DateTime.Today.AddDays(1) }
@@ -68,9 +68,8 @@ public class PaymentServiceTests
     [Fact]
     public async Task AddPaymentAsync_ShouldRefundAndThrow_WhenPayingAfterEndDate()
     {
-        // Arrange: kontrakt kończy się dziś, więc można dodać płatność
-        _contractRepo.SeedContracts(new[]
-        {
+        // Arrange
+        _contractRepo.SeedContracts([
             new Contract
             {
                 Id = 2, ClientId = 1, SoftwareId = 1,
@@ -78,14 +77,12 @@ public class PaymentServiceTests
                 StartDate = DateTime.Today.AddDays(-10),
                 EndDate = DateTime.Today // kontrakt jeszcze trwa
             }
-        });
+        ]);
 
-        // Dodaj wpłatę podczas trwania kontraktu
         await _service.AddPaymentAsync(new CreatePaymentDto { ContractId = 2, Amount = 3000 });
 
-        // Teraz "kończy się" kontrakt (symulujemy upływ czasu)
         var contract = await _contractRepo.GetByIdAsync(2);
-        contract.EndDate = DateTime.Today.AddDays(-1); // kontrakt już nieaktualny
+        contract.EndDate = DateTime.Today.AddDays(-1);
 
         // Act & Assert
         var ex = await Assert.ThrowsAsync<ConflictException>(() =>

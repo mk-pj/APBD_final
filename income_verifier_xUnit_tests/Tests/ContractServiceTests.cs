@@ -1,4 +1,5 @@
 using income_verifier.DTOs;
+using income_verifier.DTOs.Contract;
 using income_verifier.Middlewares;
 using income_verifier.Repositories.Fake;
 using income_verifier.Services;
