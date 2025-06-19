@@ -1,5 +1,6 @@
 using income_verifier.Middlewares;
 using income_verifier.Models;
+using income_verifier.Repositories.Interfaces;
 
 namespace income_verifier.Repositories.Fake;
 

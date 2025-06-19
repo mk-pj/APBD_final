@@ -1,6 +1,6 @@
 using income_verifier.Models;
 
-namespace income_verifier.Repositories;
+namespace income_verifier.Repositories.Interfaces;
 
 public interface IContractRepository
 {
@@ -10,4 +10,5 @@ public interface IContractRepository
     public Task<List<Contract>> GetActiveContractsForClientAndSoftwareAsync(int clientId, int softwareId);
     public Task DeleteAsync(int id);
     public Task MarkAsSignedAsync(int contractId);
+    public Task<List<Contract>> GetAllAsync();
 }

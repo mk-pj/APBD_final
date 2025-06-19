@@ -1,6 +1,6 @@
 using income_verifier.Models;
 
-namespace income_verifier.Repositories;
+namespace income_verifier.Repositories.Interfaces;
 
 public interface IPaymentRepository
 {

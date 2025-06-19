@@ -1,4 +1,4 @@
-namespace income_verifier.DTOs;
+namespace income_verifier.DTOs.Payment;
 
 public class CreatePaymentDto
 {

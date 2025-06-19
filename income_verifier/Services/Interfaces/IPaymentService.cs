@@ -1,7 +1,8 @@
 using income_verifier.DTOs;
+using income_verifier.DTOs.Payment;
 using income_verifier.Models;
 
-namespace income_verifier.Services;
+namespace income_verifier.Services.Interfaces;
 
 public interface IPaymentService
 {

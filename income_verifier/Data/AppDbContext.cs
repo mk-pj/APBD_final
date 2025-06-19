@@ -58,14 +58,14 @@ public class AppDbContext : DbContext
             e.Property(x => x.Description).IsRequired().HasMaxLength(200);
             e.Property(x => x.CurrentVersion).IsRequired().HasMaxLength(20);
             e.Property(x => x.Category).IsRequired().HasMaxLength(50);
-            e.Property(x => x.Price).IsRequired();
+            e.Property(x => x.Price).IsRequired().HasPrecision(18,2);
         });
 
         modelBuilder.Entity<Discount>(e =>
         {
             e.HasKey(x => x.Id);
             e.Property(x => x.Name).IsRequired().HasMaxLength(100);
-            e.Property(x => x.Percentage).IsRequired();
+            e.Property(x => x.Percentage).IsRequired().HasPrecision(5, 2);
             e.Property(x => x.StartDate).IsRequired();
             e.Property(x => x.EndDate).IsRequired();
         });
@@ -74,7 +74,7 @@ public class AppDbContext : DbContext
         {
             e.HasKey(x => x.Id);
             e.Property(x => x.SoftwareVersion).IsRequired().HasMaxLength(20);
-            e.Property(x => x.Price).IsRequired();
+            e.Property(x => x.Price).IsRequired().HasPrecision(18, 2);
             e.Property(x => x.StartDate).IsRequired();
             e.Property(x => x.EndDate).IsRequired();
             e.Property(x => x.SupportYears).HasDefaultValue(0);
@@ -100,9 +100,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Payment>(e =>
         {
             e.HasKey(x => x.Id);
-            e.Property(x => x.Amount).IsRequired();
+            e.Property(x => x.Amount).IsRequired().HasPrecision(18, 2);
             e.Property(x => x.PaymentDate).IsRequired();
-            e.Property(x => x.IsPaid).IsRequired();
             
             e.HasOne(x => x.Contract)
                 .WithMany(c => c.Payments)
@@ -234,16 +233,14 @@ public class AppDbContext : DbContext
                 Id = 1,
                 ContractId = 1,
                 Amount = 5000m,
-                PaymentDate = DateTime.Today.AddDays(-5),
-                IsPaid = true
+                PaymentDate = DateTime.Today.AddDays(-5)
             },
             new Payment
             {
                 Id = 2,
                 ContractId = 2,
                 Amount = 6000m,
-                PaymentDate = DateTime.Today.AddDays(-2),
-                IsPaid = false
+                PaymentDate = DateTime.Today.AddDays(-2)
             }
         );
     }

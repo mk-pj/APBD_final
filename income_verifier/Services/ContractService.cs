@@ -1,7 +1,8 @@
-using income_verifier.DTOs;
+using income_verifier.DTOs.Contract;
 using income_verifier.Middlewares;
 using income_verifier.Models;
-using income_verifier.Repositories;
+using income_verifier.Repositories.Interfaces;
+using income_verifier.Services.Interfaces;
 
 namespace income_verifier.Services;
 

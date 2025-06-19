@@ -1,4 +1,5 @@
 using income_verifier.Models;
+using income_verifier.Repositories.Interfaces;
 
 namespace income_verifier.Repositories.Fake;
 
@@ -12,7 +13,7 @@ public class FakeContractRepository : IContractRepository
             Id = 1, ClientId = 1, SoftwareId = 1, SoftwareVersion = "1.0.0", 
             Price = 5000, StartDate = DateTime.Today.AddDays(-100), 
             EndDate = DateTime.Today.AddDays(-90), SupportYears = 1,
-            IsSigned = true, IsDeleted = false
+            IsSigned = false, IsDeleted = false
         }
     ];
 
@@ -41,6 +42,11 @@ public class FakeContractRepository : IContractRepository
         if (contract != null)
             contract.IsDeleted = true;
         return Task.CompletedTask;
+    }
+    
+    public Task<List<Contract>> GetAllAsync()
+    {
+        return Task.FromResult(_contracts.ToList());
     }
     
     public Task MarkAsSignedAsync(int contractId)
