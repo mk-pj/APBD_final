@@ -6,13 +6,18 @@ using income_verifier.Services.Interfaces;
 namespace income_verifier.Services;
 
 using Models;
-using Repositories;
 using Middlewares;
 
 public class ClientService(IClientRepository clientRepo) : IClientService
 {
     public async Task<int> AddIndividualClientAsync(IndividualClient client)
     {
+        if(client.Pesel.Length != 11)
+            throw new ArgumentException("PESEL must be 11 characters long");
+        
+        ValidateEmail(client.Email);
+        ValidatePhone(client.Phone);
+        
         if (await clientRepo.PeselExistsAsync(client.Pesel))
             throw new ConflictException("Client with this PESEL already exists");
 
@@ -22,11 +27,29 @@ public class ClientService(IClientRepository clientRepo) : IClientService
 
     public async Task<int> AddCompanyClientAsync(CompanyClient client)
     {
+        if(client.Krs.Length != 10)
+            throw new ArgumentException("KRs must be 10 characters long");
+        
+        ValidateEmail(client.Email);
+        ValidatePhone(client.Phone);
+        
         if (await clientRepo.KrsExistsAsync(client.Krs))
             throw new ConflictException("Client with this KRS already exists");
 
         await clientRepo.AddAsync(client);
         return client.Id;
+    }
+    
+    private static void ValidateEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email) || !email.Contains('@') || !email.Contains('.'))
+            throw new ArgumentException("Invalid email address");
+    }
+
+    private static void ValidatePhone(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone) || phone.Length < 9 || !phone.All(char.IsDigit))
+            throw new ArgumentException("Invalid phone number");
     }
 
     public async Task<Client> GetClientByIdAsync(int id)
@@ -41,6 +64,9 @@ public class ClientService(IClientRepository clientRepo) : IClientService
 
     public async Task UpdateClientAsync(Client client)
     {
+        ValidateEmail(client.Email);
+        ValidatePhone(client.Phone);
+        
         var existing = await clientRepo.GetByIdAsync(client.Id)
             ?? throw new NotFoundException("Client to update was not found");
         
@@ -75,6 +101,7 @@ public class ClientService(IClientRepository clientRepo) : IClientService
     
     public async Task UpdateIndividualClientAsync(int id, UpdateIndividualClientDto dto)
     {
+        
         var client = await clientRepo.GetByIdAsync(id) as IndividualClient
             ?? throw new NotFoundException("Client to update was not found");
 
@@ -85,9 +112,16 @@ public class ClientService(IClientRepository clientRepo) : IClientService
         if (dto.Address != null)
             client.Address = dto.Address;
         if (dto.Email != null)
-            client.Email = dto.Email;
+        {
+           ValidateEmail(dto.Email); 
+           client.Email = dto.Email;
+        }
+
         if (dto.Phone != null)
+        {
+            ValidatePhone(dto.Phone);
             client.Phone = dto.Phone;
+        }
 
         await clientRepo.UpdateAsync(client);
     }
@@ -102,9 +136,16 @@ public class ClientService(IClientRepository clientRepo) : IClientService
         if (dto.Address != null)
             client.Address = dto.Address;
         if (dto.Email != null)
+        {
+            ValidateEmail(dto.Email);
             client.Email = dto.Email;
+        }
+
         if (dto.Phone != null)
+        {
+            ValidatePhone(dto.Phone);
             client.Phone = dto.Phone;
+        }
 
         await clientRepo.UpdateAsync(client);
     }

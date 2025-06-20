@@ -9,18 +9,8 @@ public class ContractRepository(AppDbContext context) : IContractRepository
 {
     public async Task AddAsync(Contract contract)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync();
-        try
-        {
-            await context.Contracts.AddAsync(contract);
-            await context.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
+        await context.Contracts.AddAsync(contract);
+        await context.SaveChangesAsync();
     }
 
     public async Task<Contract?> GetByIdAsync(int id)
@@ -46,44 +36,24 @@ public class ContractRepository(AppDbContext context) : IContractRepository
 
     public async Task DeleteAsync(int id)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync();
-        try
+        var contract = await context.Contracts.FirstOrDefaultAsync(c => c.Id == id);
+        if (contract != null)
         {
-            var contract = await context.Contracts.FirstOrDefaultAsync(c => c.Id == id);
-            if (contract != null)
-            {
-                contract.IsDeleted = true;
-                context.Contracts.Update(contract);
-                await context.SaveChangesAsync();
-            }
-            await transaction.CommitAsync();
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
+            contract.IsDeleted = true;
+            context.Contracts.Update(contract);
+            await context.SaveChangesAsync();
         }
     }
 
     public async Task MarkAsSignedAsync(int contractId)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync();
-        try
+        var contract = await context.Contracts
+            .FirstOrDefaultAsync(c => c.Id == contractId);
+        if (contract != null)
         {
-            var contract = await context.Contracts
-                .FirstOrDefaultAsync(c => c.Id == contractId);
-            if (contract != null)
-            {
-                contract.IsSigned = true;
-                context.Contracts.Update(contract);
-                await context.SaveChangesAsync();
-            }
-            await transaction.CommitAsync();
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
+            contract.IsSigned = true;
+            context.Contracts.Update(contract);
+            await context.SaveChangesAsync();
         }
     }
 

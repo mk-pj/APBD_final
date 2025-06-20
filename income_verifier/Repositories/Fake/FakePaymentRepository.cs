@@ -26,6 +26,12 @@ public class FakePaymentRepository : IPaymentRepository
         return Task.CompletedTask;
     }
 
+    public Task BeginTransactionAsync() => Task.CompletedTask;
+
+    public Task CommitTransactionAsync() => Task.CompletedTask;
+
+    public Task RollbackTransactionAsync() => Task.CompletedTask;
+
     public void SeedPayments(IEnumerable<Payment> payments)
     {
         _payments.Clear();

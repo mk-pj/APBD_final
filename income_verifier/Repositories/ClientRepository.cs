@@ -14,54 +14,24 @@ public class ClientRepository(AppDbContext context) : IClientRepository
 
     public async Task AddAsync(Client client)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync();
-        try
-        {
-            await context.Clients.AddAsync(client);
-            await context.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
+        await context.Clients.AddAsync(client);
+        await context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Client client)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync();
-        try
-        {
-            context.Clients.Update(client);
-            await context.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
+        context.Clients.Update(client);
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync();
-        try
+        var client = await context.Clients.FindAsync(id);
+        if (client is IndividualClient ind)
         {
-            var client = await context.Clients.FindAsync(id);
-            if (client is IndividualClient ind)
-            {
-                ind.IsDeleted = true;
-                context.Clients.Update(ind);
-                await context.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
+            ind.IsDeleted = true;
+            context.Clients.Update(ind);
+            await context.SaveChangesAsync();
         }
     }
 

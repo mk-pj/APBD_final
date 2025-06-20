@@ -13,36 +13,46 @@ public class PaymentService(
 {
     public async Task<int> AddPaymentAsync(CreatePaymentDto dto)
     {
-        var contract = await contractRepository.GetByIdAsync(dto.ContractId)
-            ?? throw new NotFoundException("Contract not found");
-
-        var totalPaid = await GetTotalPaidAsync(contract.Id);
-
-        if (DateTime.Today > contract.EndDate)
+        await paymentRepository.BeginTransactionAsync();
+        try
         {
-            if (totalPaid < contract.Price)
-                await paymentRepository.DeleteAllByContractIdAsync(contract.Id);
-            throw new ConflictException("Cannot pay after contract end date.");
+            var contract = await contractRepository.GetByIdAsync(dto.ContractId)
+                           ?? throw new NotFoundException("Contract not found");
+
+            var totalPaid = await GetTotalPaidAsync(contract.Id);
+
+            if (DateTime.Today > contract.EndDate)
+            {
+                if (totalPaid < contract.Price)
+                    await paymentRepository.DeleteAllByContractIdAsync(contract.Id);
+                throw new ConflictException("Cannot pay after contract end date.");
+            }
+
+            if (totalPaid + dto.Amount > contract.Price)
+                throw new ConflictException("Payment would exceed contract price.");
+
+            var payment = new Payment
+            {
+                ContractId = contract.Id,
+                Amount = dto.Amount,
+                PaymentDate = DateTime.Today
+            };
+
+            await paymentRepository.AddAsync(payment);
+
+            totalPaid += dto.Amount;
+
+            if (!contract.IsSigned && totalPaid == contract.Price)
+                await contractRepository.MarkAsSignedAsync(contract.Id);
+
+            await paymentRepository.CommitTransactionAsync();
+            return payment.Id;
         }
-
-        if (totalPaid + dto.Amount > contract.Price)
-            throw new ConflictException("Payment would exceed contract price.");
-
-        var payment = new Payment
+        catch
         {
-            ContractId = contract.Id,
-            Amount = dto.Amount,
-            PaymentDate = DateTime.Today
-        };
-        
-        await paymentRepository.AddAsync(payment);
-
-        totalPaid += dto.Amount;
-
-        if (!contract.IsSigned && totalPaid == contract.Price)
-            await contractRepository.MarkAsSignedAsync(contract.Id);
-
-        return payment.Id;
+            await paymentRepository.RollbackTransactionAsync();
+            throw;
+        }
     }
 
     public async Task<List<Payment>> GetPaymentsByContractIdAsync(int contractId)

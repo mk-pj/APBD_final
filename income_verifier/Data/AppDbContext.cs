@@ -5,11 +5,13 @@ namespace income_verifier.Data;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<Client> Clients { get; set; } = null!;
-    public DbSet<Payment> Payments { get; set; } = null!;
-    public DbSet<Discount> Discounts { get; set; } = null!;
-    public DbSet<Software> Software { get; set; } = null!;
-    public DbSet<Contract> Contracts { get; set; } = null!;
+    
+    public DbSet<User> Users { get; set; }
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<Discount> Discounts { get; set; }
+    public DbSet<Software> Software { get; set; }
+    public DbSet<Contract> Contracts { get; set; }
     
     protected AppDbContext()
     {
@@ -107,6 +109,19 @@ public class AppDbContext : DbContext
                 .WithMany(c => c.Payments)
                 .HasForeignKey(x => x.ContractId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+        
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(u => u.Id);
+            entity.HasIndex(u => u.Username).IsUnique();
+            entity.Property(u => u.Username)
+                  .IsRequired()
+                  .HasMaxLength(50);
+            entity.Property(u => u.Password)
+                  .IsRequired()
+                  .HasMaxLength(100);
+            entity.Property(u => u.IsAdmin).IsRequired();
         });
         
         
@@ -242,6 +257,11 @@ public class AppDbContext : DbContext
                 Amount = 6000m,
                 PaymentDate = DateTime.Today.AddDays(-2)
             }
+        );
+        
+        modelBuilder.Entity<User>().HasData(
+            new User { Id = 1, Username = "admin", Password = "admin123", IsAdmin = true },
+            new User { Id = 2, Username = "user", Password = "user123", IsAdmin = false }
         );
     }
 }
