@@ -2,10 +2,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using income_verifier.DTOs.AppUser;
+using income_verifier.Examples.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using income_verifier.Models;
 using income_verifier.Repositories.Interfaces;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace income_verifier.Controllers;
 
@@ -18,6 +20,7 @@ public class AuthController(
 {
     
     [HttpPost("login")]
+    [SwaggerRequestExample(typeof(LoginRequestDto), typeof(LoginRequestDtoExample))]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
     {
         var user = await users.GetByUsernameAsync(dto.Username);
@@ -31,7 +34,7 @@ public class AuthController(
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            config["Jwt:Key"] ?? "your-super-secret-key-123456789!"
+            config["Jwt:Key"] ?? "super-secret-key-123456789!"
         ));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -50,6 +53,7 @@ public class AuthController(
     }
 
     [HttpPost("register")]
+    [SwaggerRequestExample(typeof(RegisterRequestDto), typeof(RegisterRequestDtoExample))]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
     {
         var exists = await users.GetByUsernameAsync(dto.Username);

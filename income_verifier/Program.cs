@@ -9,6 +9,11 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using income_verifier.Examples.Auth;
+using income_verifier.Examples.Client;
+using income_verifier.Examples.Contract;
+using income_verifier.Examples.Payment;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,7 +97,18 @@ builder.Services.AddSwaggerGen(options =>
             Array.Empty<string>()
         }
     });
+    
+    options.ExampleFilters();
 });
+
+builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateIndividualClientDtoExample>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateCompanyClientDtoExample>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<UpdateIndividualClientDtoExample>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<UpdateCompanyClientDtoExample>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<LoginRequestDtoExample>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<RegisterRequestDtoExample>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateContractDtoExample>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<CreatePaymentDtoExample>();
 
 var app = builder.Build();
 

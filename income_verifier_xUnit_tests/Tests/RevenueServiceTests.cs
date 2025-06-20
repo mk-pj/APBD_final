@@ -1,6 +1,7 @@
 using income_verifier.Models;
 using income_verifier.Repositories.Fake;
 using income_verifier.Services;
+using income_verifier.Services.Interfaces;
 
 namespace income_verifier_xUnit_tests.Tests;
 
@@ -8,7 +9,7 @@ public class RevenueServiceTests
 {
     private readonly FakeContractRepository _contractRepo;
     private readonly FakePaymentRepository _paymentRepo;
-    private readonly RevenueService _service;
+    private readonly IRevenueService _service;
 
     public RevenueServiceTests()
     {

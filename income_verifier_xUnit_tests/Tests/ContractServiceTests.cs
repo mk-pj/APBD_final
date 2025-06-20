@@ -3,13 +3,14 @@ using income_verifier.DTOs.Contract;
 using income_verifier.Middlewares;
 using income_verifier.Repositories.Fake;
 using income_verifier.Services;
+using income_verifier.Services.Interfaces;
 
 namespace income_verifier_xUnit_tests.Tests;
 
 public class ContractServiceTests
 {
     
-    private readonly ContractService _contractService = new(
+    private readonly IContractService _contractService = new ContractService(
         new FakeContractRepository(),
         new FakeClientRepository(),
         new FakeSoftwareRepository(),

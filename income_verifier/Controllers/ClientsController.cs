@@ -1,8 +1,10 @@
 using income_verifier.DTOs.Client;
+using income_verifier.Examples.Client;
 using income_verifier.Mappers;
 using income_verifier.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace income_verifier.Controllers;
 
@@ -28,7 +30,9 @@ public class ClientsController(IClientService service) : ControllerBase
         return Ok(dto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("individual")]
+    [SwaggerRequestExample(typeof(CreateIndividualClientDto), typeof(CreateIndividualClientDtoExample))]
     public async Task<ActionResult> CreateIndividual([FromBody] CreateIndividualClientDto dto)
     {
         var client = ClientMapper.FromCreateDto(dto);
@@ -36,7 +40,9 @@ public class ClientsController(IClientService service) : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, dto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("company")]
+    [SwaggerRequestExample(typeof(CreateCompanyClientDto), typeof(CreateCompanyClientDtoExample))]
     public async Task<ActionResult> CreateCompany([FromBody] CreateCompanyClientDto dto)
     {
         var client = ClientMapper.FromCreateDto(dto);
@@ -44,20 +50,25 @@ public class ClientsController(IClientService service) : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, dto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("individual/{id:int}")]
+    [SwaggerRequestExample(typeof(UpdateIndividualClientDto), typeof(UpdateIndividualClientDtoExample))]
     public async Task<IActionResult> UpdateIndividual(int id, [FromBody] UpdateIndividualClientDto dto)
     {
         await service.UpdateIndividualClientAsync(id, dto);
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("company/{id:int}")]
+    [SwaggerRequestExample(typeof(UpdateCompanyClientDto), typeof(UpdateCompanyClientDtoExample))]
     public async Task<IActionResult> UpdateCompany(int id, [FromBody] UpdateCompanyClientDto dto)
     {
         await service.UpdateCompanyClientAsync(id, dto);
         return NoContent();
     }
-
+    
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

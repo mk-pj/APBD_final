@@ -3,6 +3,7 @@ using income_verifier.Models;
 using income_verifier.Repositories.Fake;
 using income_verifier.Services;
 using income_verifier.Middlewares;
+using income_verifier.Repositories.Interfaces;
 using income_verifier.Services.Interfaces;
 
 namespace income_verifier_xUnit_tests.Tests;
@@ -11,7 +12,7 @@ public class ClientServiceTests
 {
 
     private readonly IClientService _service;
-    private readonly FakeClientRepository _clientRepo;
+    private readonly IClientRepository _clientRepo;
 
     public ClientServiceTests()
     {
@@ -85,7 +86,6 @@ public class ClientServiceTests
         var clients = await _service.GetAllClientsAsync();
         Assert.Equal(2, clients.Count);
     }
-    
 
     [Fact]
     public async Task DeleteIndividualClientAsync_ShouldSoftDeleteClient_WhenClientExists()

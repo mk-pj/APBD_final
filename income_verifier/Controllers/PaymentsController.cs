@@ -1,10 +1,14 @@
 using income_verifier.DTOs.Payment;
+using income_verifier.Examples.Payment;
 using income_verifier.Mappers;
 using income_verifier.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace income_verifier.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class PaymentsController(IPaymentService service) : ControllerBase
@@ -33,6 +37,7 @@ public class PaymentsController(IPaymentService service) : ControllerBase
     }
     
     [HttpPost]
+    [SwaggerRequestExample(typeof(CreatePaymentDto), typeof(CreatePaymentDtoExample))]
     public async Task<ActionResult<PaymentDto>> Add([FromBody] CreatePaymentDto dto)
     {
         var id = await service.AddPaymentAsync(dto);

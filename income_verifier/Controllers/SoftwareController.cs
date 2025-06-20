@@ -2,10 +2,12 @@ using income_verifier.DTOs.Software;
 using income_verifier.Mappers;
 using income_verifier.Middlewares;
 using income_verifier.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace income_verifier.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SoftwareController(ISoftwareRepository repository) : ControllerBase

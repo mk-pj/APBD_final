@@ -1,4 +1,3 @@
-using income_verifier.DTOs;
 using income_verifier.DTOs.Client;
 using income_verifier.Repositories.Interfaces;
 using income_verifier.Services.Interfaces;

@@ -1,8 +1,10 @@
 using income_verifier.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace income_verifier.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class RevenuesController(IRevenueService service) : ControllerBase

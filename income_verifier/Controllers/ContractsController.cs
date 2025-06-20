@@ -1,10 +1,14 @@
 using income_verifier.DTOs.Contract;
+using income_verifier.Examples.Contract;
 using income_verifier.Mappers;
 using income_verifier.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace income_verifier.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ContractsController(IContractService contractService) : ControllerBase
@@ -18,6 +22,7 @@ public class ContractsController(IContractService contractService) : ControllerB
     }
     
     [HttpPost]
+    [SwaggerRequestExample(typeof(CreateContractDto), typeof(CreateContractDtoExample))]
     public async Task<ActionResult<ContractDto>> Create([FromBody] CreateContractDto dto)
     {
         var contractId = await contractService.CreateContractAsync(dto);

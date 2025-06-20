@@ -3,15 +3,17 @@ using income_verifier.DTOs.Payment;
 using income_verifier.Middlewares;
 using income_verifier.Models;
 using income_verifier.Repositories.Fake;
+using income_verifier.Repositories.Interfaces;
 using income_verifier.Services;
+using income_verifier.Services.Interfaces;
 
 namespace income_verifier_xUnit_tests.Tests;
 
 public class PaymentServiceTests
 {
-    private readonly FakePaymentRepository _paymentRepo;
+    private readonly IPaymentRepository _paymentRepo;
     private readonly FakeContractRepository _contractRepo;
-    private readonly PaymentService _service;
+    private readonly IPaymentService _service;
 
     public PaymentServiceTests()
     {
